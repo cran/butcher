@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+<title>Adding models to butcher</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#header {
+text-align: center;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Adding models to butcher</h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(butcher)</a></code></pre></div>
+<p>If you come across any model objects that should be subject to butchering, but does not exist in our current repository as listed <a href="https://tidymodels.github.io/parsnip/articles/articles/Models.html">here</a>, please consider becoming a contributer to this package! For any first-timers, this is great place to start as we’ve created templates that make this process as seamless as possible.</p>
+<p>Let’s say our new model object, of class <code>blob</code>, was generated from a <code>R</code> package called <code>blobber</code>. If you want to add axe methods for this class, first clone butcher onto your local computer and open up RStudio (see <code>usethis::create_from_github(&quot;tidymodels/butcher&quot;)</code> for an automated way to do this). After you have opened RStudio and are in the <code>butcher</code> RStudio Project, run:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="op">&gt;</span><span class="st"> </span><span class="kw">new_model_butcher</span>(<span class="dt">model_class =</span> <span class="st">&quot;blob&quot;</span>, <span class="dt">package_name =</span> <span class="st">&quot;blobber&quot;</span>)</a></code></pre></div>
+<p>You’ll get the following console messages:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">✔ Setting active project to <span class="st">'path_to_butcher_package'</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">✔ Adding <span class="st">'blobber'</span> to Suggests field <span class="cf">in</span> DESCRIPTION</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">● Use <span class="st">`</span><span class="dt">requireNamespace(&quot;blobber&quot;, quietly = TRUE)</span><span class="st">`</span> to test <span class="cf">if</span> package is installed</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">● Then directly refer to functons like <span class="st">`</span><span class="dt">blobber::fun()</span><span class="st">`</span> (replacing <span class="st">`</span><span class="dt">fun()</span><span class="st">`</span>).</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">ℹ Writing skeleton files</a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">✔ Writing <span class="st">'R/blob.R'</span></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8">✔ Writing <span class="st">'tests/testthat/test-blob.R'</span></a>
+<a class="sourceLine" id="cb3-9" data-line-number="9">● Modify <span class="st">'R/blob.R'</span></a>
+<a class="sourceLine" id="cb3-10" data-line-number="10">● Modify <span class="st">'tests/testthat/test-blob.R'</span></a></code></pre></div>
+<p><code>new_model_butcher()</code> leverages <code>usethis</code> to:</p>
+<ol style="list-style-type: decimal">
+<li>Add the new <code>blobber</code> modeling package under <code>Suggests</code> in the <code>butcher</code> package description file.</li>
+<li>Generate a skeleton file under the <code>R</code> directory with all possible axe methods for <code>blob</code>.</li>
+<li>Generate an associated test file under <code>tests/testthat</code> to test new <code>blob</code> axe methods.</li>
+</ol>
+<p>As shown by the <code>R</code> scripts attached to other model objects that exist in this package, <em>not all</em> axe generics are used. In fact, if you take a look at the <code>elnet.R</code> script, the only component of the model object fit from the package <code>glmnet</code> that might be worth axing is the <code>call</code>. To help target what is worth removing from <code>blob</code>, we recommend first beginning with <code>butcher::weigh()</code> to identify which parts of the model object take up the most memory.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="op">&gt;</span><span class="st"> </span><span class="kw">weigh</span>(fitted_blob_object)</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="co"># A tibble: 25 x 2</span></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">   object            size</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">   <span class="op">&lt;</span>chr<span class="op">&gt;</span><span class="st">            </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="st"> </span><span class="dv">1</span> terms         <span class="fl">4.01</span>    </a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"> <span class="dv">2</span> qr.qr         <span class="fl">0.00666</span> </a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"> <span class="dv">3</span> residuals     <span class="fl">0.00286</span> </a>
+<a class="sourceLine" id="cb4-8" data-line-number="8"> <span class="dv">4</span> fitted.values <span class="fl">0.00286</span> </a>
+<a class="sourceLine" id="cb4-9" data-line-number="9"> <span class="dv">5</span> effects       <span class="fl">0.0014</span>  </a>
+<a class="sourceLine" id="cb4-10" data-line-number="10"> <span class="dv">6</span> coefficients  <span class="fl">0.00109</span> </a>
+<a class="sourceLine" id="cb4-11" data-line-number="11"> <span class="dv">7</span> call          <span class="fl">0.000728</span></a>
+<a class="sourceLine" id="cb4-12" data-line-number="12"> <span class="dv">8</span> model.mpg     <span class="fl">0.000304</span></a>
+<a class="sourceLine" id="cb4-13" data-line-number="13"> <span class="dv">9</span> model.cyl     <span class="fl">0.000304</span></a>
+<a class="sourceLine" id="cb4-14" data-line-number="14"><span class="dv">10</span> model.disp    <span class="fl">0.000304</span></a>
+<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="co"># … with 15 more rows</span></a></code></pre></div>
+<p>In this example, the fitted model objected generated from <code>blobber</code> has a <code>terms</code> component that is taking 4.01 Mb. From here, you can examine the structure of this terms component by leveraging <code>lobstr::sxp(fitted_blob_object$terms)</code> or simply running <code>utils::str(fitted_blob_object$terms)</code>. If you are looking to hunt for a specific component like the environment, fitted values, training data, controls or the call object, take a look at <code>butcher::locate()</code>.</p>
+<p>Perhaps from our model object, <code>blob</code>, we find that the <code>call</code> is the only piece worth axing (or replacing). The <code>R/blob.R</code> skeleton would be completed by putting a placeholder for the original call.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co">#' Axing a blob.</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co">#'</span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">#' blob model objects are created from the blobber package. They are</span></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">#' generally leveraged for classification ... insert anything relevant </span></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co">#' ... This is where all the blob specific documentation lies.</span></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="co">#'</span></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="co">#' @param x Model object.</span></a>
+<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="co">#' @param verbose Print information each time an axe method is executed</span></a>
+<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="co">#'  that notes how much memory is released and what functions are</span></a>
+<a class="sourceLine" id="cb5-10" data-line-number="10"><span class="co">#'  disabled. Default is \code{TRUE}.</span></a>
+<a class="sourceLine" id="cb5-11" data-line-number="11"><span class="co">#' @param ... Any additional arguments related to axing.</span></a>
+<a class="sourceLine" id="cb5-12" data-line-number="12"><span class="co">#'</span></a>
+<a class="sourceLine" id="cb5-13" data-line-number="13"><span class="co">#' @return Axed model object.</span></a>
+<a class="sourceLine" id="cb5-14" data-line-number="14"><span class="co">#'</span></a>
+<a class="sourceLine" id="cb5-15" data-line-number="15"><span class="co">#' @name axe-blob</span></a>
+<a class="sourceLine" id="cb5-16" data-line-number="16"><span class="ot">NULL</span></a>
+<a class="sourceLine" id="cb5-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb5-18" data-line-number="18"><span class="co">#' Remove the call.</span></a>
+<a class="sourceLine" id="cb5-19" data-line-number="19"><span class="co">#'</span></a>
+<a class="sourceLine" id="cb5-20" data-line-number="20"><span class="co">#' @rdname axe-blob</span></a>
+<a class="sourceLine" id="cb5-21" data-line-number="21"><span class="co">#' @export</span></a>
+<a class="sourceLine" id="cb5-22" data-line-number="22">axe_call.blob &lt;-<span class="st"> </span><span class="cf">function</span>(x, <span class="dt">verbose =</span> <span class="ot">TRUE</span>, ...) {</a>
+<a class="sourceLine" id="cb5-23" data-line-number="23">  old &lt;-<span class="st"> </span>x</a>
+<a class="sourceLine" id="cb5-24" data-line-number="24">  x &lt;-<span class="st"> </span><span class="kw">exchange</span>(x, <span class="st">&quot;call&quot;</span>, <span class="kw">call</span>(<span class="st">&quot;dummy_call&quot;</span>))</a>
+<a class="sourceLine" id="cb5-25" data-line-number="25">  <span class="cf">if</span> (verbose) {</a>
+<a class="sourceLine" id="cb5-26" data-line-number="26">    <span class="kw">assess_object</span>(</a>
+<a class="sourceLine" id="cb5-27" data-line-number="27">      old, </a>
+<a class="sourceLine" id="cb5-28" data-line-number="28">      x,</a>
+<a class="sourceLine" id="cb5-29" data-line-number="29">      <span class="dt">disabled =</span> <span class="kw">c</span>(<span class="st">&quot;print&quot;</span>, <span class="st">&quot;summary&quot;</span>)</a>
+<a class="sourceLine" id="cb5-30" data-line-number="30">    )</a>
+<a class="sourceLine" id="cb5-31" data-line-number="31">  }</a>
+<a class="sourceLine" id="cb5-32" data-line-number="32">  <span class="kw">add_butcher_class</span>(x)</a>
+<a class="sourceLine" id="cb5-33" data-line-number="33">}</a></code></pre></div>
+<p>Here we assign the current blob object <code>x</code> to the variable <code>old</code> as a means to evaluate the memory released once <code>axe_call()</code> is executed on the original model object. Next, we actually <code>exchange()</code> the current call with a dummy call of a (hopefully) smaller size. We also include <code>assess_object()</code> with the additional string parameter of <code>disabled</code> so console messages will be printed out, alerting users of any downstream functions would be affected by axing the call. Since the original model object is fundamentally different, we attach an additional <code>butcher_blob</code> class by calling <code>add_butcher_class()</code> at the end of each axe method. Once the axe methods are set, we then have a skeleton file <code>tests/testthat/test-blob.R</code> to aid in any unit testing.</p>
+<div id="recap" class="section level2">
+<h2>Recap</h2>
+<p>Adding a new model object to butcher:</p>
+<ol style="list-style-type: decimal">
+<li>Run <code>new_model_butcher(model_class = &quot;blob&quot;, package_name = &quot;blobber&quot;)</code></li>
+<li>Use butcher helper functions <code>butcher::weigh()</code> and <code>butcher::locate()</code> to decide what to axe</li>
+<li>Finalize edits to <code>R/blob.R</code> and <code>tests/testthat/test-blob.R</code></li>
+<li>Make a pull request!</li>
+</ol>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
