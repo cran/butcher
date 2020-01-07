@@ -1,10 +1,10 @@
-## ---- include = FALSE----------------------------------------------------
+## ---- include = FALSE---------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 
-## ----setup, echo = FALSE, warnings = FALSE, message = FALSE--------------
+## ----setup, echo = FALSE, warnings = FALSE, message = FALSE-------------------
 suppressWarnings(library(butcher))
 suppressWarnings(library(dplyr))
 suppressWarnings(library(clisymbols))

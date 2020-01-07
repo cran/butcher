@@ -6,6 +6,7 @@ skip_if_not_installed("rsample")
 # Load libraries
 library(recipes)
 library(rsample)
+library(modeldata)
 
 # Data sets used for testing
 data(biomass)
@@ -15,23 +16,27 @@ set.seed(55)
 train_test_split <- initial_split(credit_data)
 credit_tr <- training(train_test_split)
 
+# Additional data sets used
+data(covers)
+data(okc)
+
 # Test helpers
 terms_empty_env <- function(axed, step_number) {
   expect_identical(attr(axed$steps[[step_number]]$terms[[1]], ".Environment"),
-                   rlang::empty_env())
+                   rlang::base_env())
 }
 
 impute_empty_env <- function(axed, step_number) {
   expect_identical(attr(axed$steps[[step_number]]$impute_with[[1]], ".Environment"),
-                   rlang::empty_env())
+                   rlang::base_env())
 }
 
 inputs_empty_env <- function(axed, input_number) {
   expect_identical(attr(axed$steps[[1]]$input[[input_number]], ".Environment"),
-                   rlang::empty_env())
+                   rlang::base_env())
 }
 
-test_en <- rlang::empty_env()
+test_en <- rlang::base_env()
 
 test_that("recipe + axe_env() works", {
   rec <- recipe(HHV ~ carbon + hydrogen + oxygen + nitrogen + sulfur,
@@ -250,7 +255,6 @@ test_that("recipe + step_novel + axe_env() works", {
   okc_te$diet[4] <- "vampirism"
   rec <- recipe(Class ~ ., data = okc_tr) %>%
     step_novel(diet, location)
-  rec <- prep(rec, training = okc_tr)
   x <- axe_env(rec)
   terms_empty_env(x, 1)
 })
@@ -259,9 +263,10 @@ test_that("recipe + step_num2factor + axe_env() works", {
   iris2 <- iris
   iris2$Species <- as.numeric(iris2$Species)
   rec <- recipe(~ ., data = iris2) %>%
-    step_num2factor(Species)
-  rec <- recipe(Class ~ ., data = okc) %>%
-    step_integer(all_predictors())
+    step_num2factor(
+      Species,
+      levels = c("setosa", "versicolor", "virginica")
+    )
   x <- axe_env(rec)
   terms_empty_env(x, 1)
 })
@@ -318,7 +323,6 @@ test_that("recipe + step_range + axe_env() works", {
 test_that("recipe + step_geodist + axe_env() works", {
   data(Smithsonian)
   rec <- recipe( ~ ., data = Smithsonian) %>%
-    update_role(name, new_role = "location") %>%
     step_geodist(lat = latitude, lon = longitude, log = FALSE,
                  ref_lat = 38.8986312, ref_lon = -77.0062457)
   x <- axe_env(rec)

@@ -8,18 +8,8 @@
 #' @return Axed glmnet object.
 #'
 #' @examples
+#' \donttest{
 #' suppressWarnings(suppressMessages(library(parsnip)))
-#' suppressWarnings(suppressMessages(library(glmnet)))
-#'
-#' wrapped_glmnet <- function() {
-#'   some_junk_in_environment <- runif(1e6)
-#'   x <- model.matrix(mpg ~ ., data = mtcars)
-#'   y <- as.matrix(sample(c(1, 0), size = 32, replace = TRUE))
-#'   fit <- glmnet(x, as.factor(y), family = "binomial")
-#'   return(fit)
-#' }
-#'
-#' out <- butcher(wrapped_glmnet, verbose = TRUE)
 #'
 #' # Wrap a parsnip glmnet model
 #' wrapped_parsnip_glmnet <- function() {
@@ -31,7 +21,7 @@
 #' }
 #'
 #' out <- butcher(wrapped_parsnip_glmnet(), verbose = TRUE)
-#'
+#' }
 #' @name axe-glmnet
 NULL
 

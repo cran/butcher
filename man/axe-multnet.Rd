@@ -24,9 +24,9 @@ multnet objects are created from carrying out multinomial regression
 in the \pkg{glmnet} package.
 }
 \examples{
+\donttest{
 # Load libraries
 suppressWarnings(suppressMessages(library(parsnip)))
-suppressWarnings(suppressMessages(library(glmnet)))
 
 # Load data
 set.seed(1234)
@@ -34,21 +34,10 @@ predictrs <- matrix(rnorm(100*20), ncol = 20)
 response <- as.factor(sample(1:4, 100, replace = TRUE))
 
 # Create model and fi
-multnet_fit <- multinom_reg() \%>\%
-  set_engine("glmnet") \%>\%
+multnet_fit <- multinom_reg() %>%
+  set_engine("glmnet") %>%
   fit_xy(x = predictrs, y = response)
 
 out <- butcher(multnet_fit, verbose = TRUE)
-
-# Another multnet object
-fit <- glmnet(predictrs, response, family = "multinomial")
-out2 <- butcher(fit, verbose = TRUE)
-
-# Same predictions
-newdata <- matrix(rnorm(100*3), ncol = 20)
-original_prediction <- predict(fit, newdata)
-butchered_prediction <- predict(out2, newdata)
-identical(original_prediction,
-          butchered_prediction)
-
+}
 }
