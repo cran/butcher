@@ -1,10 +1,10 @@
-c49e35494b541371d2411896f5877d86 *DESCRIPTION
+7f2b185e6ce30818e7aad1c34570a4e1 *DESCRIPTION
 e8757060005a7b73421509de6101733d *LICENSE
 b40b92e246e088e94f45b4807943ee79 *NAMESPACE
-91f21d1d60ad62e363d0102a416aa8e0 *NEWS.md
+9b2f93d2d414197ebbc3d60b1dd595df *NEWS.md
 b6ad967f73efcd14f6153c7d9cbf7c4f *R/axe-generics.R
 95d2f9a14d19ed529f3277d1e6c8b194 *R/butcher-package.R
-cf943b72bae81b31737795ea14cf12d8 *R/c5.R
+936c620ff90fc2662b8a1615fac56846 *R/c5.R
 3d22429453f3d1ac98009eeaf1fd1b5b *R/classbagg.R
 17110e7fe5f0b77640b690e0c7dac7a8 *R/docs.R
 a434aa41bb7c76535a69d9eed0b5ae93 *R/earth.R
@@ -40,7 +40,7 @@ d305044ccba322ef5949a7f719a49774 *R/ui.R
 073a9b4b2536cef41ba8222688b800aa *R/weigh.R
 dcddffd1bfaf6cb0cd849b556f9f883b *R/xgb.R
 b3e56705b20269b267d08be41de36228 *README.md
-be1134fdd2226d935eabdd1cbd340d74 *build/butcher.pdf
+997dfd67806c071c135aa0f25137f460 *build/butcher.pdf
 b69a158d14f970513404f18adb88526a *build/vignette.rds
 5d8edb2f21c8f61b94d8271d7e9c68d0 *inst/doc/adding-models-to-butcher.R
 0e2d92b7815fb632a76d9a1cdcd7c3b6 *inst/doc/adding-models-to-butcher.Rmd
@@ -50,10 +50,10 @@ b69a158d14f970513404f18adb88526a *build/vignette.rds
 ea9e9d6560903c23e6a40582abffb70f *inst/doc/available-axe-methods.html
 8f1e181b947c166159f60a69e7d45cdc *inst/doc/butcher.R
 9115b6e213d520ffa2d0b47da0656745 *inst/doc/butcher.Rmd
-498d6ba4a3bc860ad27757cf8e805093 *inst/doc/butcher.html
+e977c9834b033240b82d713bcb049b13 *inst/doc/butcher.html
 8d64b0d71dc580f1e8c6bdc285d01e54 *inst/templates/butcher_object.R
 dd835fed6a50a0c4d4294ede8652c83c *inst/templates/test-butchered_object.R
-41f409c396791aa61e34834e26dbab8e *man/axe-C5.0.Rd
+05a1c7a9fa73240666127d5b6f8ca3ec *man/axe-C5.0.Rd
 b8dca9c59f3ca55e956f8cf61d3dff01 *man/axe-classbagg.Rd
 57d981a590e8f5a30dc56a0f609ecbd5 *man/axe-earth.Rd
 0f465d591388e4a82a1a7164158736ab *man/axe-elnet.Rd
@@ -95,7 +95,7 @@ a7879f863c2ba6e728bf7c5e7def4cae *man/new_model_butcher.Rd
 e3bde62dc381df8334c0bef13a3ba9c7 *man/weigh.Rd
 0dd6dff9a62c64dbda1412b4d52b8ede *tests/testthat.R
 6270a70f1ec2ce69a73842037220036a *tests/testthat/helper-objects.R
-d684e589f43c15674218b618250ca3fe *tests/testthat/test-c5.R
+9a73fc4dea0c10576f23b6a101a03ba9 *tests/testthat/test-c5.R
 909e7b5a4f02b927181deffd62bf6e4d *tests/testthat/test-classbagg.R
 fae3b1f042b7c7a9b7fcd46484e6a482 *tests/testthat/test-earth.R
 c26e603e3f3c5b6dd9e09e547bb256f6 *tests/testthat/test-elnet.R
