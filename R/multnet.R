@@ -9,12 +9,15 @@
 #'
 #' @examples
 #' \donttest{
+#' if (rlang::is_installed("glmnet")) {
+#'
 #' # Load libraries
 #' suppressWarnings(suppressMessages(library(parsnip)))
 #'
 #' # Load data
 #' set.seed(1234)
 #' predictrs <- matrix(rnorm(100*20), ncol = 20)
+#' colnames(predictrs) <- paste0("a", seq_len(ncol(predictrs)))
 #' response <- as.factor(sample(1:4, 100, replace = TRUE))
 #'
 #' # Create model and fi
@@ -23,6 +26,8 @@
 #'   fit_xy(x = predictrs, y = response)
 #'
 #' out <- butcher(multnet_fit, verbose = TRUE)
+#'
+#' }
 #' }
 #' @name axe-multnet
 NULL

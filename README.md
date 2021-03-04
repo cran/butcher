@@ -1,16 +1,15 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# butcher <a href='https://tidymodels.github.io/butcher/'><img src='butcher.png' align="right" height="139" /></a>
+# butcher <a href='https://butcher.tidymodels.org/'><img src='butcher.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
 
-[![Travis build
-status](https://travis-ci.org/tidymodels/butcher.svg?branch=master)](https://travis-ci.org/tidymodels/butcher)
 [![Codecov test
 coverage](https://codecov.io/gh/tidymodels/butcher/branch/master/graph/badge.svg)](https://codecov.io/gh/tidymodels/butcher?branch=master)
 [![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+[![R-CMD-check](https://github.com/tidymodels/butcher/workflows/R-CMD-check/badge.svg)](https://github.com/tidymodels/butcher/actions)
 <!-- badges: end -->
 
 ## Overview
@@ -48,11 +47,11 @@ devtools::install_github("tidymodels/butcher")
 To make the most of your memory available, this package provides five S3
 generics for you to remove parts of a model object:
 
-  - `axe_call()`: To remove the call object.
-  - `axe_ctrl()`: To remove controls associated with training.
-  - `axe_data()`: To remove the original training data.
-  - `axe_env()`: To remove environments.
-  - `axe_fitted()`: To remove fitted values.
+-   `axe_call()`: To remove the call object.
+-   `axe_ctrl()`: To remove controls associated with training.
+-   `axe_data()`: To remove the original training data.
+-   `axe_env()`: To remove environments.
+-   `axe_fitted()`: To remove fitted values.
 
 As an example, we wrap a `lm` model:
 
@@ -109,7 +108,6 @@ To remove this (mostly) extraneous component, we can use `axe_env()`:
 
 ``` r
 cleaned_lm <- butcher::axe_env(big_lm, verbose = TRUE)
-#> ✔ Memory released: '7,999,256 B'
 ```
 
 Comparing it against our `small_lm`, we’ll find:
@@ -163,21 +161,38 @@ result.
 ## Model Object Coverage
 
 The current axe methods have been tested on all `parsnip` model objects
-as listed
-[here](https://tidymodels.github.io/parsnip/articles/articles/Models.html).
-If you are working with a new model object that could benefit from any
-kind of axing, we would love for you to make a pull request\! You can
-visit the `vignette("adding-models-to-butcher")` for more guidelines,
-but in short, to contribute a set of axe methods:
+as listed [here](https://www.tidymodels.org/find/parsnip/). If you are
+working with a new model object that could benefit from any kind of
+axing, we would love for you to make a pull request! You can visit the
+`vignette("adding-models-to-butcher")` for more guidelines, but in
+short, to contribute a set of axe methods:
 
-1)  Run `new_model_butcher(model_class = "your_object", package_name =
-    "your_package")`
-2)  Use butcher helper functions `butcher::weigh()` and
+1.  Run
+    `new_model_butcher(model_class = "your_object", package_name = "your_package")`
+2.  Use butcher helper functions `butcher::weigh()` and
     `butcher::locate()` to decide what to axe
-3)  Finalize edits to `R/your_object.R` and
+3.  Finalize edits to `R/your_object.R` and
     `tests/testthat/test-your_object.R`
-4)  Make a pull request\!
+4.  Make a pull request!
 
-Please note that the `butcher` package is released with a [Contributor
-Code of Conduct](https://usethis.r-lib.org/CODE_OF_CONDUCT.html). By
-contributing to this project, you agree to abide by its terms.
+## Contributing
+
+This project is released with a [Contributor Code of
+Conduct](https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html).
+By contributing to this project, you agree to abide by its terms.
+
+-   For questions and discussions about tidymodels packages, modeling,
+    and machine learning, please [post on RStudio
+    Community](https://community.rstudio.com/new-topic?category_id=15&tags=tidymodels,question).
+
+-   If you think you have encountered a bug, please [submit an
+    issue](https://github.com/tidymodels/butcher/issues).
+
+-   Either way, learn how to create and share a
+    [reprex](https://reprex.tidyverse.org/articles/articles/learn-reprex.html)
+    (a minimal, reproducible example), to clearly communicate about your
+    code.
+
+-   Check out further details on [contributing guidelines for tidymodels
+    packages](https://www.tidymodels.org/contribute/) and [how to get
+    help](https://www.tidymodels.org/help/).

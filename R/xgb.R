@@ -18,17 +18,18 @@
 #' data(agaricus.train)
 #' bst <- xgboost(data = agaricus.train$data,
 #'                label = agaricus.train$label,
-#'                max.depth = 2,
 #'                eta = 1,
 #'                nthread = 2,
 #'                nrounds = 2,
-#'                objective = "binary:logistic")
+#'                eval_metric = "logloss",
+#'                objective = "binary:logistic",
+#'                verbose = 0)
 #'
 #' out <- butcher(bst, verbose = TRUE)
 #'
 #' # Another xgboost model
 #' fit <- boost_tree(mode = "classification", trees = 20) %>%
-#'   set_engine("xgboost") %>%
+#'   set_engine("xgboost", eval_metric = "mlogloss") %>%
 #'   fit(Species ~ ., data = iris)
 #'
 #' out <- butcher(fit, verbose = TRUE)

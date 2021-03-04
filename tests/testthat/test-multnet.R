@@ -7,12 +7,13 @@ test_that("multnet + predict() works", {
   library(parsnip)
   set.seed(1234)
   predictrs <- matrix(rnorm(100*20), ncol = 20)
+  colnames(predictrs) <- paste0("a", seq_len(ncol(predictrs)))
   response <- as.factor(sample(1:4, 100, replace = TRUE))
   fit <- multinom_reg() %>%
     set_engine("glmnet") %>%
     fit_xy(x = predictrs, y = response)
   x <- axe_call(fit)
-  expect_equal(x$call, rlang::expr(dummy_call()))
+  expect_equal(x$fit$call, rlang::expr(dummy_call()))
   x <- butcher(fit)
   expect_equal(
     predict(fit, new_data = predictrs[1:3, ], penalty = 1),

@@ -24,7 +24,9 @@
 #' @return Axed spark object.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
+#' if (FALSE) {
+#'
 #' suppressWarnings(suppressMessages(library(sparklyr)))
 #'
 #' sc <- spark_connect(master = "local")
@@ -36,6 +38,10 @@
 #' spark_fit <- ml_logistic_regression(train, Species ~ .)
 #'
 #' out <- butcher(spark_fit, verbose = TRUE)
+#'
+#' spark_disconnect(sc)
+#'
+#' }
 #' }
 #' @name axe-spark
 NULL
