@@ -1,15 +1,13 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# butcher <a href='https://butcher.tidymodels.org/'><img src='butcher.png' align="right" height="139" /></a>
+# butcher <a href='https://butcher.tidymodels.org/'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
 
 [![Codecov test
-coverage](https://codecov.io/gh/tidymodels/butcher/branch/master/graph/badge.svg)](https://codecov.io/gh/tidymodels/butcher?branch=master)
-[![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
-[![R-CMD-check](https://github.com/tidymodels/butcher/workflows/R-CMD-check/badge.svg)](https://github.com/tidymodels/butcher/actions)
+coverage](https://codecov.io/gh/tidymodels/butcher/branch/main/graph/badge.svg)](https://app.codecov.io/gh/tidymodels/butcher?branch=main)
+[![R-CMD-check](https://github.com/tidymodels/butcher/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/tidymodels/butcher/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 ## Overview
@@ -85,7 +83,7 @@ most memory, we leverage the `weigh()` function:
 ``` r
 big_lm <- our_model()
 butcher::weigh(big_lm)
-#> # A tibble: 25 x 2
+#> # A tibble: 25 × 2
 #>    object            size
 #>    <chr>            <dbl>
 #>  1 terms         8.01    
@@ -114,7 +112,7 @@ Comparing it against our `small_lm`, we’ll find:
 
 ``` r
 butcher::weigh(cleaned_lm)
-#> # A tibble: 25 x 2
+#> # A tibble: 25 × 2
 #>    object            size
 #>    <chr>            <dbl>
 #>  1 terms         0.00789 
@@ -134,7 +132,7 @@ butcher::weigh(cleaned_lm)
 
 ``` r
 butcher::weigh(small_lm)
-#> # A tibble: 25 x 2
+#> # A tibble: 25 × 2
 #>    object            size
 #>    <chr>            <dbl>
 #>  1 terms         0.00781 
@@ -160,20 +158,19 @@ result.
 
 ## Model Object Coverage
 
-The current axe methods have been tested on all `parsnip` model objects
-as listed [here](https://www.tidymodels.org/find/parsnip/). If you are
-working with a new model object that could benefit from any kind of
-axing, we would love for you to make a pull request! You can visit the
-`vignette("adding-models-to-butcher")` for more guidelines, but in
-short, to contribute a set of axe methods:
+Check out the `vignette("available-axe-methods")` to see butcher’s
+current coverage. If you are working with a new model object that could
+benefit from any kind of axing, we would love for you to make a pull
+request! You can visit the `vignette("adding-models-to-butcher")` for
+more guidelines, but in short, to contribute a set of axe methods:
 
-1.  Run
+1)  Run
     `new_model_butcher(model_class = "your_object", package_name = "your_package")`
-2.  Use butcher helper functions `butcher::weigh()` and
+2)  Use butcher helper functions `butcher::weigh()` and
     `butcher::locate()` to decide what to axe
-3.  Finalize edits to `R/your_object.R` and
+3)  Finalize edits to `R/your_object.R` and
     `tests/testthat/test-your_object.R`
-4.  Make a pull request!
+4)  Make a pull request!
 
 ## Contributing
 

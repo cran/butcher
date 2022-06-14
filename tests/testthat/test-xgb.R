@@ -1,5 +1,3 @@
-context("xgb.Booster")
-
 # TODO: this particular model relies on a setup and teardown infrastructure
 # since saving the model object from xgboost in R results in a handle
 # (pointer) to an internal xgboost model that is invalid
@@ -7,7 +5,7 @@ context("xgb.Booster")
 test_that("xgb.Booster + linear solver + predict() works", {
   skip_on_cran()
   skip_if_not_installed("xgboost")
-  library(xgboost)
+  suppressPackageStartupMessages(library(xgboost))
   # Load data
   data(agaricus.train)
   data(agaricus.test)
@@ -23,10 +21,6 @@ test_that("xgb.Booster + linear solver + predict() works", {
   expect_equal(x$call, rlang::expr(dummy_call()))
   x <- axe_env(bst)
   expect_lt(lobstr::obj_size(x), lobstr::obj_size(bst))
-  x <- axe_ctrl(bst)
-  expect_equal(x$params, list(NULL))
-  x <- axe_fitted(bst)
-  expect_equal(x$raw, raw())
   x <- butcher(bst)
   expect_equal(xgb.importance(model = x),
                xgb.importance(model = bst))
@@ -39,7 +33,7 @@ test_that("xgb.Booster + linear solver + predict() works", {
 test_that("xgb.Booster + tree-learning algo + predict() works", {
   skip_on_cran()
   skip_if_not_installed("xgboost")
-  library(xgboost)
+  suppressPackageStartupMessages(library(xgboost))
   # Load data
   data(agaricus.train)
   data(agaricus.test)
@@ -56,10 +50,6 @@ test_that("xgb.Booster + tree-learning algo + predict() works", {
   expect_equal(x$call, rlang::expr(dummy_call()))
   x <- axe_env(bst)
   expect_lt(lobstr::obj_size(x), lobstr::obj_size(bst))
-  x <- axe_ctrl(bst)
-  expect_equal(x$params, list(NULL))
-  x <- axe_fitted(bst)
-  expect_equal(x$raw, raw())
   x <- butcher(bst)
   expect_equal(xgb.importance(model = x),
                xgb.importance(model = bst))

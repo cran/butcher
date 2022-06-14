@@ -1,16 +1,15 @@
-context("recipe")
-
 skip_if_not_installed("recipes")
 skip_if_not_installed("rsample")
 
 # Load libraries
-library(recipes)
-library(rsample)
-library(modeldata)
+suppressPackageStartupMessages(library(recipes))
+suppressPackageStartupMessages(library(rsample))
+suppressPackageStartupMessages(library(modeldata))
 
 # Data sets used for testing
 data(biomass)
 biomass_tr <- biomass[biomass$dataset == "Training",]
+biomass_te <- biomass[biomass$dataset == "Testing",]
 data(credit_data)
 set.seed(55)
 train_test_split <- initial_split(credit_data)
@@ -18,7 +17,7 @@ credit_tr <- training(train_test_split)
 
 # Additional data sets used
 data(covers)
-data(okc)
+data(Sacramento)
 
 # Test helpers
 terms_empty_env <- function(axed, step_number) {
@@ -50,18 +49,7 @@ test_that("recipe + axe_env() works", {
   terms_empty_env(x, 3)
 })
 
-test_that("recipe + step_knnimpute + axe_env() works", {
-  skip_if_recipes_post_0.1.16()
-
-  rec <- recipe(credit_tr) %>%
-    step_knnimpute(all_predictors())
-  x <- axe_env(rec)
-  terms_empty_env(x, 1)
-  impute_empty_env(x, 1)
-})
 test_that("recipe + step_impute_knn + axe_env() works", {
-  skip_if_recipes_pre_0.1.16()
-
   rec <- recipe(credit_tr) %>%
     step_impute_knn(all_predictors())
   x <- axe_env(rec)
@@ -69,34 +57,14 @@ test_that("recipe + step_impute_knn + axe_env() works", {
   impute_empty_env(x, 1)
 })
 
-test_that("recipe + step_lowerimpute + axe_env() works", {
-  skip_if_recipes_post_0.1.16()
-
-  rec <- recipe(credit_tr) %>%
-    step_lowerimpute(Time, Expenses, threshold = c(40,40))
-  x <- axe_env(rec)
-  terms_empty_env(x, 1)
-})
 test_that("recipe + step_impute_lower + axe_env() works", {
-  skip_if_recipes_pre_0.1.16()
-
   rec <- recipe(credit_tr) %>%
     step_impute_lower(Time, Expenses, threshold = c(40,40))
   x <- axe_env(rec)
   terms_empty_env(x, 1)
 })
 
-test_that("recipe + step_rollimpute + axe_env() works", {
-  skip_if_recipes_post_0.1.16()
-
-  rec <- recipe(credit_tr) %>%
-    step_rollimpute(Time, statistic = median, window = 3)
-  x <- axe_env(rec)
-  terms_empty_env(x, 1)
-})
 test_that("recipe + step_impute_roll + axe_env() works", {
-  skip_if_recipes_pre_0.1.16()
-
   rec <- recipe(credit_tr) %>%
     step_impute_roll(Time, statistic = median, window = 3)
   x <- axe_env(rec)
@@ -119,8 +87,9 @@ test_that("recipe + step_bs + axe_env() works", {
 })
 
 test_that("recipe + step_hyperbolic + axe_env() works", {
+  skip_if_recipes_pre_0.2.1()
   rec <- recipe(~ ., data = as.data.frame(state.x77)) %>%
-    step_hyperbolic(Income, func = "cos", inverse = FALSE)
+    step_hyperbolic(Income, func = "cosh", inverse = FALSE)
   x <- axe_env(rec)
   terms_empty_env(x, 1)
 })
@@ -242,26 +211,26 @@ test_that("recipe + step_date + axe_env() works", {
 })
 
 test_that("recipe + step_dummy + axe_env() works", {
-  rec <- recipe(~ diet + age + height, data = okc) %>%
-    step_dummy(diet)
+  rec <- recipe(~ city + sqft + price, data = Sacramento) %>%
+    step_dummy(city)
   x <- axe_env(rec)
   terms_empty_env(x, 1)
 })
 
 test_that("recipe + step_string2factor + axe_env() works", {
-  rec <- recipe(~ diet + age + height, data = okc) %>%
-    step_string2factor(diet)
-  x <- axe_env(rec)
-  terms_empty_env(x, 1)
-})
-
-test_that("recipe + step_factor2string + axe_env() works", {
-  rec <- recipe(~ diet + age + height, data = okc) %>%
-    step_string2factor(diet) %>%
-    step_factor2string(diet)
+  rec <- recipe(~ city + sqft + price, data = Sacramento) %>%
+    step_factor2string(city) %>%
+    step_string2factor(city)
   x <- axe_env(rec)
   terms_empty_env(x, 1)
   terms_empty_env(x, 2)
+})
+
+test_that("recipe + step_factor2string + axe_env() works", {
+  rec <- recipe(~ city + sqft + price, data = Sacramento) %>%
+    step_factor2string(city)
+  x <- axe_env(rec)
+  terms_empty_env(x, 1)
 })
 
 test_that("recipe + step_holiday + axe_env() works", {
@@ -273,19 +242,21 @@ test_that("recipe + step_holiday + axe_env() works", {
 })
 
 test_that("recipe + step_integer + axe_env() works", {
-  rec <- recipe(Class ~ ., data = okc) %>%
+  rec <- Sacramento %>%
+    dplyr::select(type, sqft, price, beds) %>%
+    recipe(type ~ .) %>%
     step_integer(all_predictors())
   x <- axe_env(rec)
   terms_empty_env(x, 1)
 })
 
 test_that("recipe + step_novel + axe_env() works", {
-  okc_tr <- okc[1:30000,]
-  okc_te <- okc[30001:30006,]
-  okc_te$diet[3] <- "cannibalism"
-  okc_te$diet[4] <- "vampirism"
-  rec <- recipe(Class ~ ., data = okc_tr) %>%
-    step_novel(diet, location)
+  sacr_tr <- Sacramento[1:500,] %>% dplyr::mutate(city = as.character(city))
+  sacr_te <- Sacramento[501:nrow(Sacramento),] %>% dplyr::mutate(city = as.character(city))
+  sacr_te$city[3] <- "boopville"
+  sacr_te$city[4] <- "beeptown"
+  rec <- recipe(type ~ ., data = sacr_tr) %>%
+    step_novel(city, zip)
   x <- axe_env(rec)
   terms_empty_env(x, 1)
 })
@@ -318,8 +289,8 @@ test_that("recipe + step_ordinalscore + axe_env() works", {
 })
 
 test_that("recipe + step_other + axe_env() works", {
-  rec <- recipe(~ diet + location, data = okc) %>%
-    step_other(diet, location, threshold = .1, other = "other values")
+  rec <- recipe(~ city + zip, data = Sacramento) %>%
+    step_other(city, zip, threshold = .1, other = "other values")
   x <- axe_env(rec)
   terms_empty_env(x, 1)
 })
@@ -397,13 +368,6 @@ test_that("recipe + step_slice + axe_env() works", {
   inputs_empty_env(x, 1)
 })
 
-test_that("recipe + step_nnmf + axe_env() works", {
-  rec <- recipe(HHV ~ ., data = biomass_tr) %>%
-    step_nnmf(all_predictors(), num_comp = 2, seed = 473, num_run = 2)
-  x <- axe_env(rec)
-  terms_empty_env(x, 1)
-})
-
 test_that("recipe + step_zv + axe_env() works", {
   rec <- recipe(HHV ~ ., data = biomass_tr) %>%
     step_zv(all_predictors())
@@ -467,18 +431,7 @@ test_that("recipe + step_pca + axe_env() works", {
   terms_empty_env(x, 1)
 })
 
-test_that("recipe + step_bagimpute + axe_env() works", {
-  skip_if_recipes_post_0.1.16()
-
-  rec <- recipe(Price ~ ., data = credit_tr) %>%
-    step_bagimpute(Status, Home, Marital, Job, Income, Assets, Debt)
-  x <- axe_env(rec)
-  terms_empty_env(x, 1)
-  impute_empty_env(x, 1)
-})
 test_that("recipe + step_impute_bag + axe_env() works", {
-  skip_if_recipes_pre_0.1.16()
-
   rec <- recipe(Price ~ ., data = credit_tr) %>%
     step_impute_bag(Status, Home, Marital, Job, Income, Assets, Debt)
   x <- axe_env(rec)
@@ -506,13 +459,6 @@ test_that("recipe + step_corr + axe_env() works", {
 test_that("recipe + step_depth + axe_env() works", {
   rec <- recipe(Species ~ ., data = iris) %>%
     step_depth(all_predictors(), class = "Species")
-  x <- axe_env(rec)
-  terms_empty_env(x, 1)
-})
-
-test_that("recipe + step_ica + axe_env() works", {
-  rec <- recipe(Species ~ ., data = iris) %>%
-    step_ica(Petal.Width, Sepal.Width, num_comp = 2)
   x <- axe_env(rec)
   terms_empty_env(x, 1)
 })
@@ -547,51 +493,21 @@ test_that("recipe + step_lincomb + axe_env() works", {
   terms_empty_env(x, 1)
 })
 
-test_that("recipe + step_meanimpute + axe_env() works", {
-  skip_if_recipes_post_0.1.16()
-
-  rec <- recipe(Price ~ ., data = credit_tr) %>%
-    step_meanimpute(Income, Assets, Debt)
-  x <- axe_env(rec)
-  terms_empty_env(x, 1)
-})
 test_that("recipe + step_impute_mean + axe_env() works", {
-  skip_if_recipes_pre_0.1.16()
-
   rec <- recipe(Price ~ ., data = credit_tr) %>%
     step_impute_mean(Income, Assets, Debt)
   x <- axe_env(rec)
   terms_empty_env(x, 1)
 })
 
-test_that("recipe + step_medianimpute + axe_env() works", {
-  skip_if_recipes_post_0.1.16()
-
-  rec <- recipe(Price ~ ., data = credit_tr) %>%
-    step_medianimpute(Income, Assets, Debt)
-  x <- axe_env(rec)
-  terms_empty_env(x, 1)
-})
 test_that("recipe + step_impute_median + axe_env() works", {
-  skip_if_recipes_pre_0.1.16()
-
   rec <- recipe(Price ~ ., data = credit_tr) %>%
     step_impute_median(Income, Assets, Debt)
   x <- axe_env(rec)
   terms_empty_env(x, 1)
 })
 
-test_that("recipe + step_modeimpute + axe_env() works", {
-  skip_if_recipes_post_0.1.16()
-
-  rec <- recipe(Price ~ ., data = credit_tr) %>%
-    step_modeimpute(Income, Assets, Debt)
-  x <- axe_env(rec)
-  terms_empty_env(x, 1)
-})
 test_that("recipe + step_impute_mode + axe_env() works", {
-  skip_if_recipes_pre_0.1.16()
-
   rec <- recipe(Price ~ ., data = credit_tr) %>%
     step_impute_mode(Income, Assets, Debt)
   x <- axe_env(rec)
@@ -599,7 +515,7 @@ test_that("recipe + step_impute_mode + axe_env() works", {
 })
 
 test_that("recipe + step_naomit + axe_env() works", {
-  rec <- recipe( ~ ., data = okc) %>%
+  rec <- recipe( ~ ., data = Sacramento) %>%
     step_naomit(all_predictors())
   x <- axe_env(rec)
   terms_empty_env(x, 1)
@@ -610,4 +526,19 @@ test_that("recipe + step_nzv + axe_env() works", {
     step_nzv(all_predictors())
   x <- axe_env(rec)
   terms_empty_env(x, 1)
+})
+
+test_that("recipe + axe_fitted() works", {
+  rec <- recipe(HHV ~ ., data = biomass_tr) %>%
+    step_nzv(all_predictors())
+  x <- axe_fitted(rec)
+  expect_identical(x$template, as_tibble(biomass_tr[integer(), ]))
+})
+
+test_that("recipe + bake() works", {
+  rec <- recipe(HHV ~ ., data = biomass_tr) %>%
+    step_nzv(all_predictors()) %>%
+    prep()
+  x <- butcher(rec)
+  expect_identical(bake(x, biomass_te), bake(rec, biomass_te))
 })
