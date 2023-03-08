@@ -1,3 +1,22 @@
+# butcher 0.3.2
+
+* Added butcher methods for `mixOmics::pls()`, `mixOmics::spls()`, 
+  and `mixOmics::plsda()` (#249).
+
+* Added butcher methods for `klaR::rda()` and `klaR::NaiveBayes()` (#246).
+
+* Added butcher methods for `ipred::bagging()` (#245).
+
+* Added butcher methods for `MASS::lda()` and `MASS::qda()` (#244).
+
+* Added butcher methods for `survival::coxph()` (#243).
+
+* Added butcher methods for `xrf::xrf()` (#242).
+
+* Added butcher methods for `mda::fda()` (#241).
+
+* Added butcher methods for `dbarts::bart()` (#240).
+
 # butcher 0.3.1
 
 * Added butcher methods for `ClusterR::KMeans_rcpp()` (#236).

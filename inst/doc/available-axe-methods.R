@@ -2,7 +2,8 @@
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  eval = requireNamespace("dplyr", quietly = TRUE)
+  eval = requireNamespace("dplyr", quietly = TRUE) & 
+         requireNamespace("clisymbols", quietly = TRUE)
 )
 
 ## ----setup, echo = FALSE, warnings = FALSE, message = FALSE-------------------
