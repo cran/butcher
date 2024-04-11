@@ -49,7 +49,7 @@ overflow: visible;
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -342,125 +342,125 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(butcher)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(parsnip)</span></code></pre></div>
-<p>One of the beauties of working with <code>R</code> is the ease with
-which you can implement intricate models and make challenging data
-analysis pipelines seem almost trivial. Take, for example, the
-<code>parsnip</code> package; with the installation of a few associated
-libraries and a few lines of code, you can fit something as complex as a
-boosted tree:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(rpart)</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>fitted_model <span class="ot">&lt;-</span> <span class="fu">boost_tree</span>(<span class="at">trees =</span> <span class="dv">15</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;C5.0&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>  <span class="fu">fit</span>(<span class="fu">as.factor</span>(am) <span class="sc">~</span> disp <span class="sc">+</span> hp, <span class="at">data =</span> mtcars)</span></code></pre></div>
-<p>Or, let’s say you’re working on petabytes of data, in which data are
-distributed across many nodes, just switch out the <code>parsnip</code>
-engine:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(sparklyr)</span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>sc <span class="ot">&lt;-</span> <span class="fu">spark_connect</span>(<span class="at">master =</span> <span class="st">&quot;local&quot;</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>mtcars_tbls <span class="ot">&lt;-</span> <span class="fu">sdf_copy_to</span>(sc, mtcars[, <span class="fu">c</span>(<span class="st">&quot;am&quot;</span>, <span class="st">&quot;disp&quot;</span>, <span class="st">&quot;hp&quot;</span>)])</span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>fitted_model <span class="ot">&lt;-</span> <span class="fu">boost_tree</span>(<span class="at">trees =</span> <span class="dv">15</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;spark&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>  <span class="fu">fit</span>(am <span class="sc">~</span> disp <span class="sc">+</span> hp, <span class="at">data =</span> mtcars_tbls)</span></code></pre></div>
-<p>Yet, while our code may appear compact, the underlying fitted result
-may not be. Since <code>parsnip</code> works as a wrapper for many
-modeling packages, its fitted model objects inherit the same properties
-as those that arise from the original modeling package. A
-straightforward example is the popular <code>lm</code> function from the
-base <code>stats</code> package. Whether you leverage
-<code>parsnip</code> or not, you arrive at the same result:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>parsnip_lm <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;lm&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="fu">fit</span>(mpg <span class="sc">~</span> ., <span class="at">data =</span> mtcars) </span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>parsnip_lm</span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt; parsnip model object</span></span>
+<p>One of the benefits of working in R is the ease with which you can
+implement complex models and implement challenging data analysis
+pipelines. Take, for example, the parsnip package; with the installation
+of a few associated libraries and a few lines of code, you can fit
+something as sophisticated as a boosted tree:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>fitted_model <span class="ot">&lt;-</span> <span class="fu">boost_tree</span>(<span class="at">mode =</span> <span class="st">&quot;regression&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  <span class="fu">fit</span>(mpg <span class="sc">~</span> ., <span class="at">data =</span> mtcars)</span></code></pre></div>
+<p>Yet, while this code is compact, the underlying fitted result may not
+be. Since parsnip works as a wrapper for many modeling packages, its
+fitted model objects inherit the same properties as those that arise
+from the original modeling package. A straightforward example is the
+<code>lm()</code> function from the base <code>stats</code> package.
+Whether you leverage parsnip or not, you get the same result:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>parsnip_lm <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="fu">fit</span>(mpg <span class="sc">~</span> ., <span class="at">data =</span> mtcars) </span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>parsnip_lm</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; parsnip model object</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; stats::lm(formula = mpg ~ ., data = data)</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; Coefficients:</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; (Intercept)          cyl         disp           hp         drat           wt  </span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt;    12.30337     -0.11144      0.01334     -0.02148      0.78711     -3.71530  </span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt;        qsec           vs           am         gear         carb  </span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt;     0.82104      0.31776      2.52023      0.65541     -0.19942</span></span></code></pre></div>
+<p>Using just <code>lm()</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>old_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> ., <span class="at">data =</span> mtcars) </span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>old_lm</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt; lm(formula = mpg ~ ., data = mtcars)</span></span>
 <span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
-<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt; stats::lm(formula = mpg ~ ., data = data)</span></span>
-<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt; Coefficients:</span></span>
-<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt; (Intercept)          cyl         disp           hp         drat           wt  </span></span>
-<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt;    12.30337     -0.11144      0.01334     -0.02148      0.78711     -3.71530  </span></span>
-<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt;        qsec           vs           am         gear         carb  </span></span>
-<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt;     0.82104      0.31776      2.52023      0.65541     -0.19942</span></span></code></pre></div>
-<p>Using just <code>lm</code>:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>old_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> ., <span class="at">data =</span> mtcars) </span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>old_lm</span>
-<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#&gt; lm(formula = mpg ~ ., data = mtcars)</span></span>
-<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt; Coefficients:</span></span>
-<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&gt; (Intercept)          cyl         disp           hp         drat           wt  </span></span>
-<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&gt;    12.30337     -0.11144      0.01334     -0.02148      0.78711     -3.71530  </span></span>
-<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt;        qsec           vs           am         gear         carb  </span></span>
-<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt;     0.82104      0.31776      2.52023      0.65541     -0.19942</span></span></code></pre></div>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt; Coefficients:</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt; (Intercept)          cyl         disp           hp         drat           wt  </span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt;    12.30337     -0.11144      0.01334     -0.02148      0.78711     -3.71530  </span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt;        qsec           vs           am         gear         carb  </span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt;     0.82104      0.31776      2.52023      0.65541     -0.19942</span></span></code></pre></div>
 <p>Let’s say we take this familiar <code>old_lm</code> approach in
-building our in-house modeling pipeline. Such a pipeline might entail
-wrapping <code>lm()</code> in other function, but in doing so, we may
-end up carrying some junk.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>in_house_model <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  some_junk_in_the_environment <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="fl">1e6</span>) <span class="co"># we didn&#39;t know about</span></span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="fu">lm</span>(mpg <span class="sc">~</span> ., <span class="at">data =</span> mtcars) </span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>}</span></code></pre></div>
-<p>The linear model fit that exists in our pipeline is:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">library</span>(lobstr)</span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="fu">obj_size</span>(<span class="fu">in_house_model</span>())</span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt; 8.02 MB</span></span></code></pre></div>
-<p>When it is fundamentally the same as our <code>old_lm</code>, which
+building a custom in-house modeling pipeline. Such a pipeline might
+entail wrapping <code>lm()</code> in other function, but in doing so, we
+may end up carrying around some unnecessary junk.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>in_house_model <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  some_junk_in_the_environment <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="fl">1e6</span>) <span class="co"># we didn&#39;t know about</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="fu">lm</span>(mpg <span class="sc">~</span> ., <span class="at">data =</span> mtcars) </span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>}</span></code></pre></div>
+<p>The linear model fit that exists in our custom modeling pipeline is
+then:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">library</span>(lobstr)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">obj_size</span>(<span class="fu">in_house_model</span>())</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co">#&gt; 8.02 MB</span></span></code></pre></div>
+<p>But it is functionally the same as our <code>old_lm</code>, which
 only takes up:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">obj_size</span>(old_lm)</span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co">#&gt; 22.22 kB</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">obj_size</span>(old_lm)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="co">#&gt; 22.22 kB</span></span></code></pre></div>
 <p>Ideally, we want to avoid saving this new
 <code>in_house_model()</code> on disk, when we could have something like
-<code>old_lm</code> that takes up less memory. So, what the heck is
+<code>old_lm</code> that takes up less memory. But what the heck is
 going on here? We can examine possible issues with a fitted model object
-using the <code>butcher</code> package:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>big_lm <span class="ot">&lt;-</span> <span class="fu">in_house_model</span>()</span>
-<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>butcher<span class="sc">::</span><span class="fu">weigh</span>(big_lm, <span class="at">threshold =</span> <span class="dv">0</span>, <span class="at">units =</span> <span class="st">&quot;MB&quot;</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="co">#&gt; # A tibble: 25 × 2</span></span>
-<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co">#&gt;    object            size</span></span>
-<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;            &lt;dbl&gt;</span></span>
-<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co">#&gt;  1 terms         8.01    </span></span>
-<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co">#&gt;  2 qr.qr         0.00666 </span></span>
-<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt;  3 residuals     0.00286 </span></span>
-<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co">#&gt;  4 fitted.values 0.00286 </span></span>
-<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="co">#&gt;  5 effects       0.0014  </span></span>
-<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="co">#&gt;  6 coefficients  0.00109 </span></span>
-<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a><span class="co">#&gt;  7 call          0.000728</span></span>
-<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="co">#&gt;  8 model.mpg     0.000304</span></span>
-<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="co">#&gt;  9 model.cyl     0.000304</span></span>
-<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="co">#&gt; 10 model.disp    0.000304</span></span>
-<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a><span class="co">#&gt; # ℹ 15 more rows</span></span></code></pre></div>
+using the butcher package:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>big_lm <span class="ot">&lt;-</span> <span class="fu">in_house_model</span>()</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="fu">weigh</span>(big_lm, <span class="at">threshold =</span> <span class="dv">0</span>, <span class="at">units =</span> <span class="st">&quot;MB&quot;</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co">#&gt; # A tibble: 25 × 2</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co">#&gt;    object            size</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;            &lt;dbl&gt;</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co">#&gt;  1 terms         8.01    </span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#&gt;  2 qr.qr         0.00666 </span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co">#&gt;  3 residuals     0.00286 </span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co">#&gt;  4 fitted.values 0.00286 </span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="co">#&gt;  5 effects       0.0014  </span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="co">#&gt;  6 coefficients  0.00109 </span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="co">#&gt;  7 call          0.000728</span></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="co">#&gt;  8 model.mpg     0.000304</span></span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a><span class="co">#&gt;  9 model.cyl     0.000304</span></span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="co">#&gt; 10 model.disp    0.000304</span></span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="co">#&gt; # ℹ 15 more rows</span></span></code></pre></div>
 <p>The problem here is in the <code>terms</code> component of
-<code>big_lm</code>. Because of how <code>lm</code> is implemented in
-the base <code>stats</code> package—relying on intermediate forms of the
-data from the <code>model.frame</code> and <code>model.matrix</code>
-output, the <em>environment</em> in which the linear fit was created
-<em>was carried along</em> in the model output.</p>
-<p>We can see this with the <code>env_print</code> function from the
-<code>rlang</code> package:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">library</span>(rlang)</span>
-<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="fu">env_print</span>(big_lm<span class="sc">$</span>terms)</span>
-<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="co">#&gt; &lt;environment: 0x10b0a6070&gt;</span></span>
-<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co">#&gt; Parent: &lt;environment: global&gt;</span></span>
-<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co">#&gt; Bindings:</span></span>
-<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co">#&gt; • some_junk_in_the_environment: &lt;dbl&gt;</span></span></code></pre></div>
-<p>To avoid carrying possible junk in our production pipeline, whether
-it be associated with an <code>lm</code> model (or something more
-complex), we can leverage <code>axe_env()</code> within the
-<code>butcher</code> package. In other words,</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>cleaned_lm <span class="ot">&lt;-</span> butcher<span class="sc">::</span><span class="fu">axe_env</span>(big_lm, <span class="at">verbose =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<code>big_lm</code>. Because of how <code>lm()</code> is implemented in
+the base <code>stats</code> package (relying on intermediate forms of
+the data from <code>model.frame</code> and <code>model.matrix</code>)
+the <strong>environment</strong> in which the linear fit was created is
+carried along in the model output.</p>
+<p>We can see this with the <code>env_print()</code> function from the
+rlang package:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">library</span>(rlang)</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="fu">env_print</span>(big_lm<span class="sc">$</span>terms)</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="co">#&gt; &lt;environment: 0x14276b4c8&gt;</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co">#&gt; Parent: &lt;environment: global&gt;</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="co">#&gt; Bindings:</span></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co">#&gt; • some_junk_in_the_environment: &lt;dbl&gt;</span></span></code></pre></div>
+<p>To avoid carrying possible junk around in our production pipeline,
+whether it be associated with an <code>lm()</code> model (or something
+more complex), we can leverage <code>axe_env()</code> from the butcher
+package:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>cleaned_lm <span class="ot">&lt;-</span> <span class="fu">axe_env</span>(big_lm, <span class="at">verbose =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="co">#&gt; ✔ Memory released: 8.00 MB</span></span></code></pre></div>
 <p>Comparing it against our <code>old_lm</code>, we find:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>butcher<span class="sc">::</span><span class="fu">weigh</span>(cleaned_lm, <span class="at">threshold =</span> <span class="dv">0</span>, <span class="at">units =</span> <span class="st">&quot;MB&quot;</span>)</span>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">weigh</span>(cleaned_lm, <span class="at">threshold =</span> <span class="dv">0</span>, <span class="at">units =</span> <span class="st">&quot;MB&quot;</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="co">#&gt; # A tibble: 25 × 2</span></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="co">#&gt;    object            size</span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;            &lt;dbl&gt;</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="co">#&gt;  1 terms         0.00771 </span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="co">#&gt;  2 qr.qr         0.00666 </span></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="co">#&gt;  3 residuals     0.00286 </span></span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a><span class="co">#&gt;  4 fitted.values 0.00286 </span></span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a><span class="co">#&gt;  5 effects       0.0014  </span></span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a><span class="co">#&gt;  6 coefficients  0.00109 </span></span>
+<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a><span class="co">#&gt;  7 call          0.000728</span></span>
+<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a><span class="co">#&gt;  8 model.mpg     0.000304</span></span>
+<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a><span class="co">#&gt;  9 model.cyl     0.000304</span></span>
+<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a><span class="co">#&gt; 10 model.disp    0.000304</span></span>
+<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a><span class="co">#&gt; # ℹ 15 more rows</span></span></code></pre></div>
+<p>And now it takes the same memory on disk:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">weigh</span>(old_lm, <span class="at">threshold =</span> <span class="dv">0</span>, <span class="at">units =</span> <span class="st">&quot;MB&quot;</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="co">#&gt; # A tibble: 25 × 2</span></span>
 <span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="co">#&gt;    object            size</span></span>
 <span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;            &lt;dbl&gt;</span></span>
-<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a><span class="co">#&gt;  1 terms         0.00771 </span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a><span class="co">#&gt;  1 terms         0.00763 </span></span>
 <span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="co">#&gt;  2 qr.qr         0.00666 </span></span>
 <span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="co">#&gt;  3 residuals     0.00286 </span></span>
 <span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a><span class="co">#&gt;  4 fitted.values 0.00286 </span></span>
@@ -471,25 +471,8 @@ complex), we can leverage <code>axe_env()</code> within the
 <span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a><span class="co">#&gt;  9 model.cyl     0.000304</span></span>
 <span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a><span class="co">#&gt; 10 model.disp    0.000304</span></span>
 <span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a><span class="co">#&gt; # ℹ 15 more rows</span></span></code></pre></div>
-<p>…it now takes the same memory on disk:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>butcher<span class="sc">::</span><span class="fu">weigh</span>(old_lm, <span class="at">threshold =</span> <span class="dv">0</span>, <span class="at">units =</span> <span class="st">&quot;MB&quot;</span>)</span>
-<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="co">#&gt; # A tibble: 25 × 2</span></span>
-<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="co">#&gt;    object            size</span></span>
-<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;            &lt;dbl&gt;</span></span>
-<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a><span class="co">#&gt;  1 terms         0.00763 </span></span>
-<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="co">#&gt;  2 qr.qr         0.00666 </span></span>
-<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="co">#&gt;  3 residuals     0.00286 </span></span>
-<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a><span class="co">#&gt;  4 fitted.values 0.00286 </span></span>
-<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a><span class="co">#&gt;  5 effects       0.0014  </span></span>
-<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a><span class="co">#&gt;  6 coefficients  0.00109 </span></span>
-<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a><span class="co">#&gt;  7 call          0.000728</span></span>
-<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a><span class="co">#&gt;  8 model.mpg     0.000304</span></span>
-<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a><span class="co">#&gt;  9 model.cyl     0.000304</span></span>
-<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a><span class="co">#&gt; 10 model.disp    0.000304</span></span>
-<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a><span class="co">#&gt; # ℹ 15 more rows</span></span></code></pre></div>
 <p>Axing the environment, however, is not the only functionality of
-<code>butcher</code>. This package provides five S3 generics that
-include:</p>
+butcher. This package provides five S3 generics that include:</p>
 <ul>
 <li><code>axe_call()</code>: Remove the call object.</li>
 <li><code>axe_ctrl()</code>: Remove the controls fixed for
@@ -499,54 +482,54 @@ training.</li>
 environments.</li>
 <li><code>axe_fitted()</code>: Remove fitted values.</li>
 </ul>
-<p>In our case here with <code>lm</code>, if we are only interested in
+<p>In our case here with <code>lm()</code>, if we are only interested in
 prediction as the end product of our modeling pipeline, we could free up
 a lot of memory if we execute all the possible axe functions at once. To
 do so, we simply run <code>butcher()</code>:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>butchered_lm <span class="ot">&lt;-</span> butcher<span class="sc">::</span><span class="fu">butcher</span>(big_lm)</span>
-<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="fu">predict</span>(butchered_lm, mtcars[, <span class="dv">2</span><span class="sc">:</span><span class="dv">11</span>])</span>
-<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a><span class="co">#&gt;           Mazda RX4       Mazda RX4 Wag          Datsun 710      Hornet 4 Drive </span></span>
-<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="co">#&gt;            22.59951            22.11189            26.25064            21.23740 </span></span>
-<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a><span class="co">#&gt;   Hornet Sportabout             Valiant          Duster 360           Merc 240D </span></span>
-<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a><span class="co">#&gt;            17.69343            20.38304            14.38626            22.49601 </span></span>
-<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a><span class="co">#&gt;            Merc 230            Merc 280           Merc 280C          Merc 450SE </span></span>
-<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a><span class="co">#&gt;            24.41909            18.69903            19.19165            14.17216 </span></span>
-<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a><span class="co">#&gt;          Merc 450SL         Merc 450SLC  Cadillac Fleetwood Lincoln Continental </span></span>
-<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a><span class="co">#&gt;            15.59957            15.74222            12.03401            10.93644 </span></span>
-<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a><span class="co">#&gt;   Chrysler Imperial            Fiat 128         Honda Civic      Toyota Corolla </span></span>
-<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a><span class="co">#&gt;            10.49363            27.77291            29.89674            29.51237 </span></span>
-<span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a><span class="co">#&gt;       Toyota Corona    Dodge Challenger         AMC Javelin          Camaro Z28 </span></span>
-<span id="cb14-14"><a href="#cb14-14" tabindex="-1"></a><span class="co">#&gt;            23.64310            16.94305            17.73218            13.30602 </span></span>
-<span id="cb14-15"><a href="#cb14-15" tabindex="-1"></a><span class="co">#&gt;    Pontiac Firebird           Fiat X1-9       Porsche 914-2        Lotus Europa </span></span>
-<span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a><span class="co">#&gt;            16.69168            28.29347            26.15295            27.63627 </span></span>
-<span id="cb14-17"><a href="#cb14-17" tabindex="-1"></a><span class="co">#&gt;      Ford Pantera L        Ferrari Dino       Maserati Bora          Volvo 142E </span></span>
-<span id="cb14-18"><a href="#cb14-18" tabindex="-1"></a><span class="co">#&gt;            18.87004            19.69383            13.94112            24.36827</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>butchered_lm <span class="ot">&lt;-</span> <span class="fu">butcher</span>(big_lm)</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="fu">predict</span>(butchered_lm, mtcars[, <span class="dv">2</span><span class="sc">:</span><span class="dv">11</span>])</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="co">#&gt;           Mazda RX4       Mazda RX4 Wag          Datsun 710      Hornet 4 Drive </span></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a><span class="co">#&gt;            22.59951            22.11189            26.25064            21.23740 </span></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a><span class="co">#&gt;   Hornet Sportabout             Valiant          Duster 360           Merc 240D </span></span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="co">#&gt;            17.69343            20.38304            14.38626            22.49601 </span></span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="co">#&gt;            Merc 230            Merc 280           Merc 280C          Merc 450SE </span></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a><span class="co">#&gt;            24.41909            18.69903            19.19165            14.17216 </span></span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a><span class="co">#&gt;          Merc 450SL         Merc 450SLC  Cadillac Fleetwood Lincoln Continental </span></span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a><span class="co">#&gt;            15.59957            15.74222            12.03401            10.93644 </span></span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a><span class="co">#&gt;   Chrysler Imperial            Fiat 128         Honda Civic      Toyota Corolla </span></span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a><span class="co">#&gt;            10.49363            27.77291            29.89674            29.51237 </span></span>
+<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a><span class="co">#&gt;       Toyota Corona    Dodge Challenger         AMC Javelin          Camaro Z28 </span></span>
+<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a><span class="co">#&gt;            23.64310            16.94305            17.73218            13.30602 </span></span>
+<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a><span class="co">#&gt;    Pontiac Firebird           Fiat X1-9       Porsche 914-2        Lotus Europa </span></span>
+<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a><span class="co">#&gt;            16.69168            28.29347            26.15295            27.63627 </span></span>
+<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a><span class="co">#&gt;      Ford Pantera L        Ferrari Dino       Maserati Bora          Volvo 142E </span></span>
+<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a><span class="co">#&gt;            18.87004            19.69383            13.94112            24.36827</span></span></code></pre></div>
 <p>Alternatively, we can pick and choose specific axe functions,
 removing only those parts of the model object that we are no longer
 interested in characterizing.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>butchered_lm <span class="ot">&lt;-</span> big_lm <span class="sc">%&gt;%</span></span>
-<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>  butcher<span class="sc">::</span><span class="fu">axe_env</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>  butcher<span class="sc">::</span><span class="fu">axe_fitted</span>()</span>
-<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a><span class="fu">predict</span>(butchered_lm, mtcars[, <span class="dv">2</span><span class="sc">:</span><span class="dv">11</span>])</span>
-<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a><span class="co">#&gt;           Mazda RX4       Mazda RX4 Wag          Datsun 710      Hornet 4 Drive </span></span>
-<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a><span class="co">#&gt;            22.59951            22.11189            26.25064            21.23740 </span></span>
-<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a><span class="co">#&gt;   Hornet Sportabout             Valiant          Duster 360           Merc 240D </span></span>
-<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a><span class="co">#&gt;            17.69343            20.38304            14.38626            22.49601 </span></span>
-<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a><span class="co">#&gt;            Merc 230            Merc 280           Merc 280C          Merc 450SE </span></span>
-<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a><span class="co">#&gt;            24.41909            18.69903            19.19165            14.17216 </span></span>
-<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a><span class="co">#&gt;          Merc 450SL         Merc 450SLC  Cadillac Fleetwood Lincoln Continental </span></span>
-<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a><span class="co">#&gt;            15.59957            15.74222            12.03401            10.93644 </span></span>
-<span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a><span class="co">#&gt;   Chrysler Imperial            Fiat 128         Honda Civic      Toyota Corolla </span></span>
-<span id="cb15-14"><a href="#cb15-14" tabindex="-1"></a><span class="co">#&gt;            10.49363            27.77291            29.89674            29.51237 </span></span>
-<span id="cb15-15"><a href="#cb15-15" tabindex="-1"></a><span class="co">#&gt;       Toyota Corona    Dodge Challenger         AMC Javelin          Camaro Z28 </span></span>
-<span id="cb15-16"><a href="#cb15-16" tabindex="-1"></a><span class="co">#&gt;            23.64310            16.94305            17.73218            13.30602 </span></span>
-<span id="cb15-17"><a href="#cb15-17" tabindex="-1"></a><span class="co">#&gt;    Pontiac Firebird           Fiat X1-9       Porsche 914-2        Lotus Europa </span></span>
-<span id="cb15-18"><a href="#cb15-18" tabindex="-1"></a><span class="co">#&gt;            16.69168            28.29347            26.15295            27.63627 </span></span>
-<span id="cb15-19"><a href="#cb15-19" tabindex="-1"></a><span class="co">#&gt;      Ford Pantera L        Ferrari Dino       Maserati Bora          Volvo 142E </span></span>
-<span id="cb15-20"><a href="#cb15-20" tabindex="-1"></a><span class="co">#&gt;            18.87004            19.69383            13.94112            24.36827</span></span></code></pre></div>
-<p><code>butcher</code> makes it easy to axe parts of the fitted output
-that are no longer needed, without sacrificing much functionality from
-the original model object.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>butchered_lm <span class="ot">&lt;-</span> big_lm <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>  <span class="fu">axe_env</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>  <span class="fu">axe_fitted</span>()</span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="fu">predict</span>(butchered_lm, mtcars[, <span class="dv">2</span><span class="sc">:</span><span class="dv">11</span>])</span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a><span class="co">#&gt;           Mazda RX4       Mazda RX4 Wag          Datsun 710      Hornet 4 Drive </span></span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a><span class="co">#&gt;            22.59951            22.11189            26.25064            21.23740 </span></span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a><span class="co">#&gt;   Hornet Sportabout             Valiant          Duster 360           Merc 240D </span></span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a><span class="co">#&gt;            17.69343            20.38304            14.38626            22.49601 </span></span>
+<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a><span class="co">#&gt;            Merc 230            Merc 280           Merc 280C          Merc 450SE </span></span>
+<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a><span class="co">#&gt;            24.41909            18.69903            19.19165            14.17216 </span></span>
+<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a><span class="co">#&gt;          Merc 450SL         Merc 450SLC  Cadillac Fleetwood Lincoln Continental </span></span>
+<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a><span class="co">#&gt;            15.59957            15.74222            12.03401            10.93644 </span></span>
+<span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a><span class="co">#&gt;   Chrysler Imperial            Fiat 128         Honda Civic      Toyota Corolla </span></span>
+<span id="cb14-14"><a href="#cb14-14" tabindex="-1"></a><span class="co">#&gt;            10.49363            27.77291            29.89674            29.51237 </span></span>
+<span id="cb14-15"><a href="#cb14-15" tabindex="-1"></a><span class="co">#&gt;       Toyota Corona    Dodge Challenger         AMC Javelin          Camaro Z28 </span></span>
+<span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a><span class="co">#&gt;            23.64310            16.94305            17.73218            13.30602 </span></span>
+<span id="cb14-17"><a href="#cb14-17" tabindex="-1"></a><span class="co">#&gt;    Pontiac Firebird           Fiat X1-9       Porsche 914-2        Lotus Europa </span></span>
+<span id="cb14-18"><a href="#cb14-18" tabindex="-1"></a><span class="co">#&gt;            16.69168            28.29347            26.15295            27.63627 </span></span>
+<span id="cb14-19"><a href="#cb14-19" tabindex="-1"></a><span class="co">#&gt;      Ford Pantera L        Ferrari Dino       Maserati Bora          Volvo 142E </span></span>
+<span id="cb14-20"><a href="#cb14-20" tabindex="-1"></a><span class="co">#&gt;            18.87004            19.69383            13.94112            24.36827</span></span></code></pre></div>
+<p>The butcher package provides tooling to axe parts of the fitted
+output that are no longer needed, without sacrificing much functionality
+from the original model object.</p>
 
 
 

@@ -1,3 +1,7 @@
+# butcher 0.3.4
+
+* Submit to CRAN for new HTML reference manuals.
+
 # butcher 0.3.3
 
 * Added methods for `nestedmodels::nested()` (@ashbythorpe, #256).

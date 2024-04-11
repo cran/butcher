@@ -1,4 +1,4 @@
-## ---- include = FALSE---------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -7,10 +7,10 @@ knitr::opts_chunk$set(
 ## ----setup--------------------------------------------------------------------
 library(butcher)
 
-## ---- eval = FALSE------------------------------------------------------------
+## ----eval = FALSE-------------------------------------------------------------
 #  > new_model_butcher(model_class = "blob", package_name = "blobber")
 
-## ---- eval = FALSE------------------------------------------------------------
+## ----eval = FALSE-------------------------------------------------------------
 #  ✔ Setting active project to 'path_to_butcher_package'
 #  ✔ Adding 'blobber' to Suggests field in DESCRIPTION
 #  ● Use `requireNamespace("blobber", quietly = TRUE)` to test if package is installed
@@ -22,7 +22,7 @@ library(butcher)
 #  ● Modify 'R/blob.R'
 #  ● Modify 'tests/testthat/test-blob.R'
 
-## ---- eval = FALSE------------------------------------------------------------
+## ----eval = FALSE-------------------------------------------------------------
 #  > weigh(fitted_blob_object)
 #  # A tibble: 25 x 2
 #     object            size
@@ -39,7 +39,7 @@ library(butcher)
 #  10 model.disp    0.000304
 #  # … with 15 more rows
 
-## ---- eval = FALSE------------------------------------------------------------
+## ----eval = FALSE-------------------------------------------------------------
 #  #' Axing a blob.
 #  #'
 #  #' blob model objects are created from the blobber package. They are
