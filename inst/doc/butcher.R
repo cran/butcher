@@ -10,8 +10,8 @@ library(butcher)
 library(parsnip)
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  fitted_model <- boost_tree(mode = "regression") %>%
-#    fit(mpg ~ ., data = mtcars)
+# fitted_model <- boost_tree(mode = "regression") %>%
+#   fit(mpg ~ ., data = mtcars)
 
 ## -----------------------------------------------------------------------------
 parsnip_lm <- linear_reg() %>% 
