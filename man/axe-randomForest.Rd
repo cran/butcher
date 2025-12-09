@@ -32,7 +32,7 @@ package, which is used to train random forests based on Breiman's
 regression trees.
 }
 \examples{
-\dontshow{if (rlang::is_installed(c("parsnip", "rsample", "rpart", "randomForest"))) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (rlang::is_installed(c("parsnip", "rsample", "rpart", "randomForest"))) withAutoprint(\{ # examplesIf}
 # Load libraries
 library(parsnip)
 library(rsample)
@@ -48,8 +48,8 @@ spine_train <- training(split)
 randomForest_fit <- rand_forest(mode = "classification",
                                 mtry = 2,
                                 trees = 2,
-                                min_n = 3) \%>\%
-  set_engine("randomForest") \%>\%
+                                min_n = 3) |>
+  set_engine("randomForest") |>
   fit_xy(x = spine_train[,2:4], y = spine_train$Kyphosis)
 
 out <- butcher(randomForest_fit, verbose = TRUE)

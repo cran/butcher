@@ -29,7 +29,7 @@ Axed lm object.
 lm objects are created from the base \pkg{stats} package.
 }
 \examples{
-\dontshow{if (rlang::is_installed(c("parsnip", "rsample"))) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (rlang::is_installed(c("parsnip", "rsample"))) withAutoprint(\{ # examplesIf}
 # Load libraries
 library(parsnip)
 library(rsample)
@@ -39,8 +39,8 @@ split <- initial_split(mtcars, prop = 9/10)
 car_train <- training(split)
 
 # Create model and fit
-lm_fit <- linear_reg() \%>\%
-  set_engine("lm") \%>\%
+lm_fit <- linear_reg() |>
+  set_engine("lm") |>
   fit(mpg ~ ., data = car_train)
 
 out <- butcher(lm_fit, verbose = TRUE)

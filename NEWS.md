@@ -1,3 +1,16 @@
+# butcher 0.4.0
+
+* Max Kuhn is now the maintainer.
+
+* Added methods for `MASS::polr` (@pbulsink, #289).
+
+* Added methods for `rset`, `rsplit`, `tune_results`, and `workflow_set` classes (#292).
+
+* Make to work with new versions of xgboost models (#294).
+
+* Added butcher methods for `tabnet()` (@cregouby #226).
+
+
 # butcher 0.3.6
 
 * Updated methods for `kknn::kknn()` to no longer remove the call (#288).

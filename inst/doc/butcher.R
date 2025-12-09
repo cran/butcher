@@ -10,11 +10,11 @@ library(butcher)
 library(parsnip)
 
 ## ----eval = FALSE-------------------------------------------------------------
-# fitted_model <- boost_tree(mode = "regression") %>%
+# fitted_model <- boost_tree(mode = "regression") |>
 #   fit(mpg ~ ., data = mtcars)
 
 ## -----------------------------------------------------------------------------
-parsnip_lm <- linear_reg() %>% 
+parsnip_lm <- linear_reg() |> 
   fit(mpg ~ ., data = mtcars) 
 parsnip_lm
 
@@ -57,8 +57,8 @@ butchered_lm <- butcher(big_lm)
 predict(butchered_lm, mtcars[, 2:11])
 
 ## -----------------------------------------------------------------------------
-butchered_lm <- big_lm %>%
-  axe_env() %>% 
+butchered_lm <- big_lm |>
+  axe_env() |> 
   axe_fitted()
 predict(butchered_lm, mtcars[, 2:11])
 

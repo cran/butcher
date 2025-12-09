@@ -31,25 +31,36 @@ on the first class listed, the \code{butcher_xgb.Booster} class is
 not appended.
 }
 \examples{
-\dontshow{if (rlang::is_installed(c("parsnip", "xgboost"))) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (rlang::is_installed(c("parsnip", "xgboost"))) withAutoprint(\{ # examplesIf}
 library(xgboost)
 library(parsnip)
 
 data(agaricus.train)
-bst <- xgboost(data = agaricus.train$data,
-               label = agaricus.train$label,
-               eta = 1,
-               nthread = 2,
-               nrounds = 2,
-               eval_metric = "logloss",
-               objective = "binary:logistic",
-               verbose = 0)
+
+if (utils::packageVersion("xgboost") > "2.0.0.0") {
+  bst <- xgboost(x = agaricus.train$data,
+                 y = as.factor(agaricus.train$label),
+                 learning_rate = 1,
+                 nthread = 2,
+                 nrounds = 2,
+                 eval_metric = "logloss",
+                 objective = "binary:logistic")
+} else {
+  bst <- xgboost(data = agaricus.train$data,
+                 label = agaricus.train$label,
+                 eta = 1,
+                 nthread = 2,
+                 nrounds = 2,
+                 eval_metric = "logloss",
+                 objective = "binary:logistic",
+                 verbose = 0)
+}
 
 out <- butcher(bst, verbose = TRUE)
 
 # Another xgboost model
-fit <- boost_tree(mode = "classification", trees = 20) \%>\%
-  set_engine("xgboost", eval_metric = "mlogloss") \%>\%
+fit <- boost_tree(mode = "classification", trees = 20) |>
+  set_engine("xgboost", eval_metric = "mlogloss") |>
   fit(Species ~ ., data = iris)
 
 out <- butcher(fit, verbose = TRUE)

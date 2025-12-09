@@ -31,14 +31,14 @@ are returned from the \code{survreg} function, representing fitted
 parametric survival models.
 }
 \examples{
-\dontshow{if (rlang::is_installed(c("parsnip", "survival"))) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (rlang::is_installed(c("parsnip", "survival"))) withAutoprint(\{ # examplesIf}
 # Load libraries
 library(parsnip)
 library(survival)
 
 # Create model and fit
-survreg_fit <- surv_reg(mode = "regression", dist = "weibull") \%>\%
-  set_engine("survival") \%>\%
+survreg_fit <- survival_reg(dist = "weibull") |>
+  set_engine("survival") |>
   fit(Surv(futime, fustat) ~ 1, data = ovarian)
 
 out <- butcher(survreg_fit, verbose = TRUE)

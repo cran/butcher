@@ -6,23 +6,23 @@
 #'
 #' @return Axed model_fit object.
 #'
-#' @examplesIf rlang::is_installed(c("parsnip", "rpart"))
+#' @examplesIf rlang::is_installed(c("parsnip", "mgcv"))
 #' library(parsnip)
 #' library(rpart)
 #'
 #' # Create model and fit
-#' lm_fit <- linear_reg() %>%
-#'   set_engine("lm") %>%
+#' lm_fit <- linear_reg() |>
+#'   set_engine("lm") |>
 #'   fit(mpg ~ ., data = mtcars)
 #'
 #' out <- butcher(lm_fit, verbose = TRUE)
 #'
 #' # Another parsnip model
-#' rpart_fit <- decision_tree(mode = "regression") %>%
-#'   set_engine("rpart") %>%
-#'   fit(mpg ~ ., data = mtcars, minsplit = 5, cp = 0.1)
+#' gam_fit <- gen_additive_mod() |>
+#'   set_mode("regression") |>
+#'   fit(mpg ~ s(disp) + wt + gear, data = mtcars)
 #'
-#' out <- butcher(rpart_fit, verbose = TRUE)
+#' out <- butcher(gam_fit, verbose = TRUE)
 #'
 #' @name axe-model_fit
 NULL
@@ -66,5 +66,3 @@ axe_fitted.model_fit <- function(x, verbose = FALSE, ...) {
   x$fit <- axe_fitted(x$fit, verbose = verbose, ...)
   add_butcher_attributes(x, old, verbose = verbose)
 }
-
-

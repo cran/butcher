@@ -33,7 +33,7 @@ fitted model objects from \pkg{kernlab} are S4, the \code{butcher_ksvm}
 class is not appended.
 }
 \examples{
-\dontshow{if (rlang::is_installed(c("parsnip", "kernlab"))) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (rlang::is_installed(c("parsnip", "kernlab"))) withAutoprint(\{ # examplesIf}
 # Load libraries
 library(parsnip)
 library(kernlab)
@@ -42,8 +42,8 @@ library(kernlab)
 data(spam)
 
 # Create model and fit
-ksvm_class <- svm_poly(mode = "classification") \%>\%
-  set_engine("kernlab") \%>\%
+ksvm_class <- svm_poly(mode = "classification") |>
+  set_engine("kernlab") |>
   fit(type ~ ., data = spam)
 
 out <- butcher(ksvm_class, verbose = TRUE)

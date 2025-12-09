@@ -348,7 +348,7 @@ implement complex models and implement challenging data analysis
 pipelines. Take, for example, the parsnip package; with the installation
 of a few associated libraries and a few lines of code, you can fit
 something as sophisticated as a boosted tree:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>fitted_model <span class="ot">&lt;-</span> <span class="fu">boost_tree</span>(<span class="at">mode =</span> <span class="st">&quot;regression&quot;</span>) <span class="sc">%&gt;%</span></span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>fitted_model <span class="ot">&lt;-</span> <span class="fu">boost_tree</span>(<span class="at">mode =</span> <span class="st">&quot;regression&quot;</span>) <span class="sc">|&gt;</span></span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  <span class="fu">fit</span>(mpg <span class="sc">~</span> ., <span class="at">data =</span> mtcars)</span></code></pre></div>
 <p>Yet, while this code is compact, the underlying fitted result may not
 be. Since parsnip works as a wrapper for many modeling packages, its
@@ -356,7 +356,7 @@ fitted model objects inherit the same properties as those that arise
 from the original modeling package. A straightforward example is the
 <code>lm()</code> function from the base <code>stats</code> package.
 Whether you leverage parsnip or not, you get the same result:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>parsnip_lm <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>() <span class="sc">%&gt;%</span> </span>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>parsnip_lm <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>() <span class="sc">|&gt;</span> </span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="fu">fit</span>(mpg <span class="sc">~</span> ., <span class="at">data =</span> mtcars) </span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>parsnip_lm</span>
 <span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; parsnip model object</span></span>
@@ -430,7 +430,7 @@ carried along in the model output.</p>
 rlang package:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">library</span>(rlang)</span>
 <span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="fu">env_print</span>(big_lm<span class="sc">$</span>terms)</span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="co">#&gt; &lt;environment: 0x13edf0ba0&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="co">#&gt; &lt;environment: 0x132f66238&gt;</span></span>
 <span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co">#&gt; Parent: &lt;environment: global&gt;</span></span>
 <span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="co">#&gt; Bindings:</span></span>
 <span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co">#&gt; • some_junk_in_the_environment: &lt;dbl&gt;</span></span></code></pre></div>
@@ -508,8 +508,8 @@ do so, we simply run <code>butcher()</code>:</p>
 <p>Alternatively, we can pick and choose specific axe functions,
 removing only those parts of the model object that we are no longer
 interested in characterizing.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>butchered_lm <span class="ot">&lt;-</span> big_lm <span class="sc">%&gt;%</span></span>
-<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>  <span class="fu">axe_env</span>() <span class="sc">%&gt;%</span> </span>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>butchered_lm <span class="ot">&lt;-</span> big_lm <span class="sc">|&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>  <span class="fu">axe_env</span>() <span class="sc">|&gt;</span> </span>
 <span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>  <span class="fu">axe_fitted</span>()</span>
 <span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="fu">predict</span>(butchered_lm, mtcars[, <span class="dv">2</span><span class="sc">:</span><span class="dv">11</span>])</span>
 <span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a><span class="co">#&gt;           Mazda RX4       Mazda RX4 Wag          Datsun 710      Hornet 4 Drive </span></span>

@@ -30,14 +30,14 @@ nnet objects are created from the \pkg{nnet} package, leveraged to
 fit multilayer perceptron models.
 }
 \examples{
-\dontshow{if (rlang::is_installed(c("parsnip", "nnet"))) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (rlang::is_installed(c("parsnip", "nnet"))) withAutoprint(\{ # examplesIf}
 # Load libraries
 library(parsnip)
 library(nnet)
 
 # Create and fit model
-nnet_fit <- mlp("classification", hidden_units = 2) \%>\%
-  set_engine("nnet") \%>\%
+nnet_fit <- mlp("classification", hidden_units = 2) |>
+  set_engine("nnet") |>
   fit(Species ~ ., data = iris)
 
 out <- butcher(nnet_fit, verbose = TRUE)

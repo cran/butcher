@@ -71,15 +71,15 @@ butchered class is only added to the recipe as a whole, and not to each
 pre-processing step.
 }
 \examples{
-\dontshow{if (rlang::is_installed(c("recipes", "modeldata"))) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (rlang::is_installed(c("recipes", "modeldata"))) withAutoprint(\{ # examplesIf}
 library(recipes)
 data(biomass, package = "modeldata")
 
 biomass_tr <- biomass[biomass$dataset == "Training",]
 rec <- recipe(HHV ~ carbon + hydrogen + oxygen + nitrogen + sulfur,
-              data = biomass_tr) \%>\%
-  step_center(all_predictors()) \%>\%
-  step_scale(all_predictors()) \%>\%
+              data = biomass_tr) |>
+  step_center(all_predictors()) |>
+  step_scale(all_predictors()) |>
   step_spatialsign(all_predictors())
 
 out <- butcher(rec, verbose = TRUE)
@@ -88,9 +88,9 @@ out <- butcher(rec, verbose = TRUE)
 wrapped_recipes <- function() {
   some_junk_in_environment <- runif(1e6)
   return(
-    recipe(mpg ~ cyl, data = mtcars) \%>\%
-      step_center(all_predictors()) \%>\%
-      step_scale(all_predictors()) \%>\%
+    recipe(mpg ~ cyl, data = mtcars) |>
+      step_center(all_predictors()) |>
+      step_scale(all_predictors()) |>
       prep()
   )
 }

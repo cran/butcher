@@ -16,20 +16,31 @@
 #' library(parsnip)
 #'
 #' data(agaricus.train)
-#' bst <- xgboost(data = agaricus.train$data,
-#'                label = agaricus.train$label,
-#'                eta = 1,
-#'                nthread = 2,
-#'                nrounds = 2,
-#'                eval_metric = "logloss",
-#'                objective = "binary:logistic",
-#'                verbose = 0)
+#'
+#' if (utils::packageVersion("xgboost") > "2.0.0.0") {
+#'   bst <- xgboost(x = agaricus.train$data,
+#'                  y = as.factor(agaricus.train$label),
+#'                  learning_rate = 1,
+#'                  nthread = 2,
+#'                  nrounds = 2,
+#'                  eval_metric = "logloss",
+#'                  objective = "binary:logistic")
+#' } else {
+#'   bst <- xgboost(data = agaricus.train$data,
+#'                  label = agaricus.train$label,
+#'                  eta = 1,
+#'                  nthread = 2,
+#'                  nrounds = 2,
+#'                  eval_metric = "logloss",
+#'                  objective = "binary:logistic",
+#'                  verbose = 0)
+#' }
 #'
 #' out <- butcher(bst, verbose = TRUE)
 #'
 #' # Another xgboost model
-#' fit <- boost_tree(mode = "classification", trees = 20) %>%
-#'   set_engine("xgboost", eval_metric = "mlogloss") %>%
+#' fit <- boost_tree(mode = "classification", trees = 20) |>
+#'   set_engine("xgboost", eval_metric = "mlogloss") |>
 #'   fit(Species ~ ., data = iris)
 #'
 #' out <- butcher(fit, verbose = TRUE)
@@ -43,7 +54,11 @@ NULL
 #' @export
 axe_call.xgb.Booster <- function(x, verbose = FALSE, ...) {
   old <- x
-  x <- exchange(x, "call", call("dummy_call"))
+  if (is.null(attr(x, "call"))) {
+    x <- exchange(x, "call", call("dummy_call"))
+  } else {
+    attr(x, "call") <- call("dummy_call")
+  }
 
   add_butcher_attributes(
     x,
@@ -64,11 +79,15 @@ axe_call.xgb.Booster <- function(x, verbose = FALSE, ...) {
 #' @export
 axe_env.xgb.Booster <- function(x, verbose = FALSE, ...) {
   old <- x
-  x$callbacks <- purrr::map(x$callbacks,
-    function(x)
-      as.function(c(formals(x), body(x)), env = rlang::base_env())
-    )
-
+  if (!is.null(x$callbacks)) {
+    x$callbacks <-
+      purrr::map(
+        x$callbacks,
+        function(x) {
+          as.function(c(formals(x), body(x)), env = rlang::base_env())
+        }
+      )
+  }
   add_butcher_attributes(
     x,
     old,

@@ -49,12 +49,12 @@ objects are retained from butchering, yet removal of one or the
 other might be conducive to freeing up memory on disk.
 }
 \examples{
-\dontshow{if (FALSE) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (FALSE) withAutoprint(\{ # examplesIf}
 library(sparklyr)
 
 sc <- spark_connect(master = "local")
 
-iris_tbls <- sdf_copy_to(sc, iris, overwrite = TRUE) \%>\%
+iris_tbls <- sdf_copy_to(sc, iris, overwrite = TRUE) |>
   sdf_random_split(train = 2/3, validation = 2/3, seed = 2018)
 
 train <- iris_tbls$train

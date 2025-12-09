@@ -24,7 +24,7 @@ multnet objects are created from carrying out multinomial regression
 in the \pkg{glmnet} package.
 }
 \examples{
-\dontshow{if (rlang::is_installed("glmnet")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (rlang::is_installed("glmnet")) withAutoprint(\{ # examplesIf}
 # Load libraries
 library(parsnip)
 
@@ -35,8 +35,8 @@ colnames(predictrs) <- paste0("a", seq_len(ncol(predictrs)))
 response <- as.factor(sample(1:4, 100, replace = TRUE))
 
 # Create model and fit
-multnet_fit <- multinom_reg(penalty = 0.1) \%>\%
-  set_engine("glmnet") \%>\%
+multnet_fit <- multinom_reg(penalty = 0.1) |>
+  set_engine("glmnet") |>
   fit_xy(x = predictrs, y = response)
 
 out <- butcher(multnet_fit, verbose = TRUE)

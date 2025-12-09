@@ -32,7 +32,7 @@ on the first class listed, the \code{butcher_ranger} class is not
 appended.
 }
 \examples{
-\dontshow{if (rlang::is_installed(c("parsnip", "rsample", "ranger"))) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (rlang::is_installed(c("parsnip", "rsample", "ranger"))) withAutoprint(\{ # examplesIf}
 # Load libraries
 library(parsnip)
 library(rsample)
@@ -47,8 +47,8 @@ iris_train <- training(split)
 ranger_fit <- rand_forest(mode = "classification",
                           mtry = 2,
                           trees = 20,
-                          min_n = 3) \%>\%
-  set_engine("ranger") \%>\%
+                          min_n = 3) |>
+  set_engine("ranger") |>
   fit(Species ~ ., data = iris_train)
 
 out <- butcher(ranger_fit, verbose = TRUE)

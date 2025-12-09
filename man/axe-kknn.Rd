@@ -28,7 +28,7 @@ utilized to do weighted k-Nearest Neighbors for classification,
 regression and clustering.
 }
 \examples{
-\dontshow{if (rlang::is_installed(c("parsnip", "rsample", "rpart", "kknn"))) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (rlang::is_installed(c("parsnip", "rsample", "rpart", "kknn"))) withAutoprint(\{ # examplesIf}
 # Load libraries
 library(parsnip)
 library(rsample)
@@ -44,8 +44,8 @@ spine_train <- training(split)
 kknn_fit <- nearest_neighbor(mode = "classification",
                              neighbors = 3,
                              weight_func = "gaussian",
-                             dist_power = 2) \%>\%
-  set_engine("kknn") \%>\%
+                             dist_power = 2) |>
+  set_engine("kknn") |>
   fit(Kyphosis ~ ., data = spine_train)
 
 out <- butcher(kknn_fit, verbose = TRUE)
